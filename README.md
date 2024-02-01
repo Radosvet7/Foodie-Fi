@@ -121,3 +121,45 @@ ORDER BY Count (c.customer_id) DESC
 group BY p.plan_name
 ```
 output7
+
+### 8. How many customers have upgraded to an annual plan in 2020?
+#### a) Assuming trial is considered as upgradeable item
+```sql
+SELECT   p.plan_name           AS [plan],
+         Count (s.customer_id) AS customer_cnt
+FROM     subscriptions s
+JOIN     plans p
+ON       s.plan_id = p.plan_id
+AND      s.plan_id = 3
+AND      start_date<='2020-12-31'
+GROUP BY p.plan_name
+group BY p.plan_name
+```
+output 8.1
+
+#### b) Assuming upgraded from monthly to annual excluding trial->annual upgrade
+```sql
+WITH monthly_subs
+     AS (SELECT customer_id,
+                plan_id,
+                start_date
+         FROM   subscriptions
+         WHERE  plan_id IN ( 1, 2 )
+                AND start_date <= '2020-12-31'),
+     annual_subs
+     AS (SELECT s.customer_id,
+                s.plan_id,
+                s.start_date
+         FROM   subscriptions s
+         WHERE  s.plan_id = 3
+                AND s.start_date <= '2020-12-31')
+SELECT p.plan_name           AS [plan],
+       Count (a.customer_id) AS customer_cnt
+FROM   monthly_subs m
+       JOIN annual_subs a
+         ON m.customer_id = a.customer_id
+       JOIN plans p
+         ON p.plan_id = a.plan_id
+GROUP  BY p.plan_name
+```
+output 8.2
