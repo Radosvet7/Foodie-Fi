@@ -163,3 +163,23 @@ FROM   monthly_subs m
 GROUP  BY p.plan_name
 ```
 output 8.2
+
+### 9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
+```sql
+WITH annual_subs
+     AS (SELECT customer_id,
+                plan_id,
+                start_date AS ap_start_date
+         FROM   subscriptions
+         WHERE  plan_id = 3),
+     customer_ap
+     AS (SELECT s.customer_id,
+                Datediff(day, s.start_date, a.ap_start_date) AS days_to_ap
+         FROM   subscriptions s
+                JOIN annual_subs a
+                  ON s.customer_id = a.customer_id
+                     AND s.plan_id = 0)
+SELECT Avg(days_to_ap) AS 'Average days to annual plan'
+FROM   customer_ap
+```
+output 9
