@@ -122,7 +122,7 @@ GROUP BY p.plan_name
 ORDER BY Count (c.customer_id) DESC
 group BY p.plan_name
 ```
-![image](result7.PNG)
+![image](result 7.PNG)
 
 ### 8. How many customers have upgraded to an annual plan in 2020?
 #### a) Assuming trial is considered as upgradeable item
@@ -219,7 +219,7 @@ SELECT CASE
 FROM   brackets
 GROUP  BY bracket
 ```
-![image](result10.PNG)
+![image](helper/result10.PNG)
 
 ### 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 ```sql
@@ -236,4 +236,4 @@ WITH cte
 SELECT Sum(downgraded) AS 'total downgraded'
 FROM   cte
 ```
-![image](result11.PNG)
+![image](helper/result11.PNG)
