@@ -70,3 +70,28 @@ SELECT Sum(chrn_cnt)
 FROM   churned;
 ```
 output5
+
+### 6. What is the number and percentage of customer plans after their initial free trial?
+```sql
+DECLARE @total FLOAT = (SELECT Count(DISTINCT customer_id)
+   FROM   subscriptions);
+
+WITH cte
+     AS (SELECT plan_id,
+                Row_number()
+                  OVER (
+                    partition BY customer_id
+                    ORDER BY start_date) AS plan_order
+         FROM   subscriptions s
+         WHERE  plan_id <> 0)
+SELECT p.plan_name,
+       Count(c.plan_id)                AS initial_plan_cnt,
+       Count(c.plan_id) / @total * 100 AS plan_perc
+FROM   plans p
+       JOIN cte c
+         ON p.plan_id = c.plan_id
+WHERE  c.plan_order = 1
+GROUP  BY p.plan_name
+```
+
+output6
