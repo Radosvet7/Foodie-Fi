@@ -183,3 +183,38 @@ SELECT Avg(days_to_ap) AS 'Average days to annual plan'
 FROM   customer_ap
 ```
 output 9
+
+### 10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
+```sql
+WITH trial_plan
+     AS (SELECT customer_id,
+                start_date AS join_date
+         FROM   subscriptions
+         WHERE  plan_id = 0),
+     annual_plan
+     AS (SELECT customer_id,
+                start_date AS annual_start_date
+         FROM   subscriptions
+         WHERE  plan_id = 3),
+     brackets
+     AS (SELECT tp.customer_id,
+                join_date,
+                annual_start_date,
+                Datediff(day, join_date, annual_start_date) / 30 + 1 AS bracket
+         FROM   trial_plan tp
+                JOIN annual_plan ap
+                  ON tp.customer_id = ap.customer_id)
+SELECT CASE
+         WHEN bracket = 1 THEN Concat(bracket - 1, ' - ', bracket * 30, ' days')
+         ELSE Concat(( bracket - 1 ) * 30 + 1, ' - ', bracket * 30, ' days')
+       END
+       AS period,
+       Count(customer_id)
+       AS total_customers,
+       Cast(Avg(Datediff(day, join_date, annual_start_date) * 1.0) AS
+            DECIMAL(5, 2)) AS
+       average_days
+FROM   brackets
+GROUP  BY bracket
+```
+output 10
