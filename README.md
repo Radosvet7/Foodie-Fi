@@ -1,5 +1,7 @@
 # Case Study #3 - Foodie-Fi
 
+![image](helper/Diagram.PNG)
+
 ## B. Data Analysis Questions
 
 
