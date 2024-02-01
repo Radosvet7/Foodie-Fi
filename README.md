@@ -95,3 +95,29 @@ GROUP  BY p.plan_name
 ```
 
 output6
+
+### 7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
+```sql
+DECLARE @total FLOAT =
+(
+       SELECT Count(DISTINCT customer_id)
+       FROM   subscriptions
+       WHERE  start_date<='2020-12-31');WITH cte AS
+(
+         SELECT   customer_id,
+                  plan_id,
+                  Row_number() OVER (partition BY customer_id ORDER BY start_date DESC) AS last_plan
+         FROM     subscriptions
+         WHERE    start_date<='2020-12-31')
+SELECT   p.plan_name,
+         Count ( c.customer_id )              AS customer_cnt,
+         Count (c.customer_id) / @total * 100 AS customer_perc
+FROM     cte c
+JOIN     plans p
+ON       c.plan_id = p.plan_id
+AND      c.last_plan=1
+GROUP BY p.plan_name
+ORDER BY Count (c.customer_id) DESC
+group BY p.plan_name
+```
+output7
