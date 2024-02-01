@@ -218,3 +218,20 @@ FROM   brackets
 GROUP  BY bracket
 ```
 output 10
+
+### 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
+```sql
+WITH cte
+     AS (SELECT CASE
+                  WHEN plan_id = 2
+                       AND Lead(plan_id)
+                             OVER (
+                               partition BY customer_id
+                               ORDER BY start_date) = 1 THEN 1
+                  ELSE 0
+                END AS downgraded
+         FROM   subscriptions)
+SELECT Sum(downgraded) AS 'total downgraded'
+FROM   cte
+```
+output 11
