@@ -48,3 +48,25 @@ WHERE  plan_id = 4
 ```
 outpu4
 
+### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
+```sql
+WITH churned
+     AS (SELECT customer_id,
+                CASE
+                  WHEN plan_id = 4
+                       AND Lag(plan_id)
+                             OVER (
+                               partition BY customer_id
+                               ORDER BY start_date) = 0 THEN 1
+                  ELSE 0
+                END AS chrn_cnt
+         FROM   subscriptions)
+SELECT Sum(chrn_cnt)
+       AS
+       churned_customers,
+       Floor(Sum(chrn_cnt) / Cast(Count(DISTINCT customer_id) AS FLOAT) * 100)
+       AS
+       churn_prct
+FROM   churned;
+```
+output5
