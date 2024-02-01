@@ -122,7 +122,7 @@ GROUP BY p.plan_name
 ORDER BY Count (c.customer_id) DESC
 group BY p.plan_name
 ```
-![image](result 7.PNG)
+![image](helper/result 7.PNG)
 
 ### 8. How many customers have upgraded to an annual plan in 2020?
 #### a) Assuming trial is considered as upgradeable item
