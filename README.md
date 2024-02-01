@@ -36,7 +36,7 @@ FROM   subscriptions s
 WHERE  Datepart(year, start_date) > 2020
 GROUP  BY p.plan_name
 ```
-output3
+![image](helper/result3.PNG)
 
 ### 4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?
 ```sql
@@ -48,7 +48,7 @@ SELECT Count(customer_id)                AS churned_customers,
 FROM   subscriptions
 WHERE  plan_id = 4
 ```
-outpu4
+![image](helper/result4.PNG)
 
 ### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
 ```sql
@@ -71,7 +71,7 @@ SELECT Sum(chrn_cnt)
        churn_prct
 FROM   churned;
 ```
-output5
+![image](helper/result5.PNG)
 
 ### 6. What is the number and percentage of customer plans after their initial free trial?
 ```sql
@@ -96,7 +96,7 @@ WHERE  c.plan_order = 1
 GROUP  BY p.plan_name
 ```
 
-output6
+![image](helper/result6.PNG)
 
 ### 7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
 ```sql
@@ -122,7 +122,7 @@ GROUP BY p.plan_name
 ORDER BY Count (c.customer_id) DESC
 group BY p.plan_name
 ```
-output7
+![image](result7.PNG)
 
 ### 8. How many customers have upgraded to an annual plan in 2020?
 #### a) Assuming trial is considered as upgradeable item
@@ -137,7 +137,7 @@ AND      start_date<='2020-12-31'
 GROUP BY p.plan_name
 group BY p.plan_name
 ```
-output 8.1
+![image](helper/result8_1.PNG)
 
 #### b) Assuming upgraded from monthly to annual excluding trial->annual upgrade
 ```sql
@@ -164,7 +164,7 @@ FROM   monthly_subs m
          ON p.plan_id = a.plan_id
 GROUP  BY p.plan_name
 ```
-output 8.2
+![image](helper/result8_2.PNG)
 
 ### 9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
 ```sql
@@ -184,7 +184,7 @@ WITH annual_subs
 SELECT Avg(days_to_ap) AS 'Average days to annual plan'
 FROM   customer_ap
 ```
-output 9
+![image](helper/result9.PNG)
 
 ### 10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
 ```sql
@@ -219,7 +219,7 @@ SELECT CASE
 FROM   brackets
 GROUP  BY bracket
 ```
-output 10
+![image](result10.PNG)
 
 ### 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 ```sql
@@ -236,4 +236,4 @@ WITH cte
 SELECT Sum(downgraded) AS 'total downgraded'
 FROM   cte
 ```
-output 11
+![image](result11.PNG)
